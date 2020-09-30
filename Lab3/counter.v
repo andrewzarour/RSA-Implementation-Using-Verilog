@@ -42,7 +42,7 @@ module counter (
             count_tmp <= count_tmp +1;
         end
         
-    always@(mux_ctrl)
+    always@(posedge clk)
       begin
         case(mux_ctrl)
         0: clk_div <= count_tmp[0];
@@ -92,7 +92,7 @@ module counter (
                     .op_(LED)
                     );
     
-    always@(posedge clk_div)
+    always@(posedge clk_div or posedge rst)
         begin
           if(rst)
             begin
