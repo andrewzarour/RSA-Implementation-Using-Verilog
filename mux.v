@@ -27,10 +27,31 @@ module mux #(parameter SIZE = 4)
     input [SIZE-1:0]inp2_,
     input sw1_,
     input sw2_,
+    input clk,
+    input rst,
+    input st_ps,
     
     output wire [SIZE-1:0]LED_,
     output wire [SIZE-1:0]LED2_
     );
+    
+    reg [SIZE-1:0] count;
+    
+    always@(posedge clk)
+      begin: up_count
+         if(rst)
+           begin: synchron_rst
+             count <= 4'd0;
+           end
+         else
+           begin: body_counter
+             if(st_ps)
+               begin: start_ct
+                 count <= count +1;
+               end
+           end
+      end
+    
     wire [SIZE-1:0]T1, T2, T3, T4;
     wire [SIZE-1:0]op_;
     genvar i;
