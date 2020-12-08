@@ -19,11 +19,11 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 //`define an_control 8'b00000000
- 
+
 `define dp_off   1'b1 
 `define initial_digit 8'b11111111
- 
- 
+
+
 module ssd_gen(
                 input [31:0] SW,
                 input clk,
@@ -32,18 +32,18 @@ module ssd_gen(
                 output reg [7:0] an,
                 output wire dp
               );
- 
+              
 assign dp  = `dp_off; 
- 
+
 wire [2:0] s;
 wire [7:0] aen;
 reg [19:0] clkdiv; 
 reg [3:0] digit;
 assign s = clkdiv[19:17]; 
 assign aen = `initial_digit; 
- 
- 
- 
+
+
+
 // clock divider 
     always@(posedge clk or posedge rst)
         begin 
@@ -52,7 +52,7 @@ assign aen = `initial_digit;
             else 
                 clkdiv <= clkdiv+1; 
         end 
- 
+        
 // digit select :ancode 
             always@(aen, s)
                 begin 
@@ -60,7 +60,7 @@ assign aen = `initial_digit;
                     if(aen[s] == 1)
                         an[s] = 0;
                 end 
- 
+            
             // 4-to-1 Mux: mux4x1 
             always@(s, SW)
                begin 
@@ -76,9 +76,9 @@ assign aen = `initial_digit;
               default: digit = 4'bZZZZ;     
                 endcase
               end 
- 
+
 // 7-segement decoder : hex7seg 
- 
+
 always@(digit)
     begin 
         case(digit)
@@ -98,10 +98,10 @@ always@(digit)
               'hD: a_to_g = 7'b1000010;
               'hE: a_to_g = 7'b0110000;
               'hF: a_to_g = 7'b0111000;
- 
+              
           default: a_to_g = 7'bZZZZZZZ;
         endcase 
     end             
- 
- 
+
+              
 endmodule
